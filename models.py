@@ -1,6 +1,7 @@
 from fake_useragent import UserAgent
 from files import *
 from config import register_mode
+from files import append_in_txt, remove_txt
 
 class Account:
     def __init__(self, email, password, proxy=None):
@@ -47,10 +48,18 @@ class Accounts:
         self.accounts = []
 
     def loads_accs(self):
-        accs = txt_to_list("accs" if not register_mode else "register")
-        proxies = txt_to_list("proxies")
+        accs = txt_to_list("accs" if not register_mode else "register/accs")
+
+        created_accs = txt_to_list("accs" if not register_mode else "register/created_accs") if register_mode else []
+
+        proxies = txt_to_list("proxies" if not register_mode else "register/proxies")
         proxies = proxies * int(2 + len(accs) / len(proxies))
 
         for i, acc in enumerate(accs):
+            if acc in created_accs:
+                remove_txt("data/register/accs.txt", f"{acc}")
+                remove_txt("data/register/proxies.txt", proxies[i])
+                continue
+
             acc = acc.split(":")
             self.accounts.append(Account(email=acc[0], password=acc[1], proxy=proxies[i]))
