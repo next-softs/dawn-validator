@@ -3,7 +3,6 @@
 token_captcha = ""
 
 retry_for_errors = 5            # сколько раз повторять запрос, если произошла ошибка
-threads = 3                     # кол-во потоков, регистратор работает в одном потоке
 
 ##### REG ACCOUNTS #####
 register_mode = False           # включить регистрацию True/False
