@@ -3,7 +3,6 @@
 token_captcha = ""
 
 retry_for_errors = 5            # сколько раз повторять запрос, если произошла ошибка
-threads = 3                     # кол-во потоков, регистратор работает в одном потоке
 
 ##### REG ACCOUNTS #####
 register_mode = False           # включить регистрацию True/False
@@ -14,5 +13,5 @@ delay_reg_accs = [60, 180]      # задержка между регистрац
 
 # id расширения и версия, меняйте только если знаете что делаете
 extensionid = "fpdkjdnhkakefebpekbdhillbhonfjjp"
-version_extension = "1.0.9"
+version_extension = "1.1.1"
 

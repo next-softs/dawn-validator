@@ -10,7 +10,7 @@ def save_token_json(acc_name, token):
             acc["token"] = token
             break
     else:
-        data.append({"name": acc_name, "token": token})
+        data.append({"name": acc_name, "token": token, "appid": "undefined"})
 
     with open('data/accounts.json', 'w', encoding='utf-8') as file:
         json.dump(data, file, ensure_ascii=False, indent=4)
@@ -23,6 +23,34 @@ def get_token_json(acc_name):
         for acc in data:
             if acc["name"] == acc_name:
                 return acc["token"]
+
+    except:
+        pass
+
+    return None
+
+def save_appid_json(acc_name, appid):
+    with open('data/accounts.json', 'r', encoding='utf-8') as file:
+        data = json.load(file)
+
+    for acc in data.copy():
+        if acc["name"] == acc_name:
+            acc["appid"] = appid
+            break
+    else:
+        data.append({"name": acc_name, "token": "", "appid": appid})
+
+    with open('data/accounts.json', 'w', encoding='utf-8') as file:
+        json.dump(data, file, ensure_ascii=False, indent=4)
+
+def get_appid_json(acc_name):
+    try:
+        with open('data/accounts.json', encoding='utf-8') as file:
+            data = json.load(file)
+
+        for acc in data:
+            if acc["name"] == acc_name:
+                return acc["appid"]
 
     except:
         pass
@@ -54,6 +82,4 @@ def remove_txt(path, text):
 
         with open(path, 'w', encoding='utf-8') as file:
             file.write(items)
-
-
 

@@ -9,21 +9,15 @@ from captcha import *
 
 from curl_cffi.requests import AsyncSession
 
-
 class Dawn:
     def __init__(self, account):
         self.account = account
         self.session = self.create_session()
 
-
     def create_session(self):
         proxy = f"http://{self.account.proxy}" if self.account.proxy else None
-        # connector = ProxyConnector.from_url(proxy) if self.account.proxy else aiohttp.TCPConnector(verify_ssl=True)
-        #
-        # return aiohttp.ClientSession(headers=self.account.headers(), trust_env=True, connector=connector, timeout=aiohttp.ClientTimeout(60))
 
-        session = AsyncSession(impersonate="chrome124", verify=False, timeout=30)
-        session.timeout = 30
+        session = AsyncSession(impersonate="chrome124", verify=False, timeout=15)
         session.headers = self.account.headers()
 
         if proxy: session.proxies = {"http": proxy, "https": proxy}
@@ -42,7 +36,7 @@ class Dawn:
 
                     return res.json() if ret_json else res.text
 
-                logger.error(f"{self.account.name} {res.status_code} {res.method} {url} {kwargs} {res.text}")
+                logger.error(f"{self.account.name} {res.status_code} {method} {url} {kwargs} {res.text}")
 
             except Exception as err:
                 logger.error(f"{self.account.name} {err}")
@@ -51,11 +45,11 @@ class Dawn:
         return await res.text() if res else False
 
     async def get_captcha(self):
-        res = await self.call("GET", "https://www.aeropres.in/chromeapi/dawn/v1/puzzle/get-puzzle?appid=undefined", status_code=[201, 200, 502, 504, 400, 403])
+        res = await self.call("GET", f"https://www.aeropres.in/chromeapi/dawn/v1/puzzle/get-puzzle?appid={self.account.appid}", status_code=[201, 200, 502, 504, 400, 403])
         return res
 
     async def get_image_captcha(self, puzzle_id):
-        res = await self.call("GET", f"https://www.aeropres.in/chromeapi/dawn/v1/puzzle/get-puzzle-image?puzzle_id={puzzle_id}&appid=undefined", status_code=[200, 400, 502, 504, 403])
+        res = await self.call("GET", f"https://www.aeropres.in/chromeapi/dawn/v1/puzzle/get-puzzle-image?puzzle_id={puzzle_id}&appid={self.account.appid}", status_code=[200, 400, 502, 504, 403])
         return res
 
     async def login(self):
@@ -83,7 +77,7 @@ class Dawn:
 
                 captcha_resp = await image_to_txt(captcha_image["imgBase64"])
 
-                resp = await self.call("POST", "https://www.aeropres.in/chromeapi/dawn/v1/user/login/v2?appid=undefined", status_code=[200, 400, 502, 504, 403], json=
+                resp = await self.call("POST", f"https://www.aeropres.in/chromeapi/dawn/v1/user/login/v2?appid={self.account.appid}", status_code=[200, 400, 502, 504, 403], json=
                 {
                     "username": self.account.email,
                     "password": self.account.password,
@@ -130,7 +124,7 @@ class Dawn:
 
                 captcha_resp = await image_to_txt(captcha_image["imgBase64"])
 
-                resp = await self.call("POST", "https://www.aeropres.in/chromeapi/dawn/v1/puzzle/validate-register?appid=undefined", status_code=[200, 400, 502, 504, 403],
+                resp = await self.call("POST", f"https://www.aeropres.in/chromeapi/dawn/v1/puzzle/validate-register?appid={self.account.appid}", status_code=[200, 400, 502, 504, 403],
                                  json={
                                      "firstname": self.account.name,
                                      "lastname": self.account.name,
@@ -174,13 +168,13 @@ class Dawn:
             pass
 
     async def get_points(self):
-        return await self.call("GET", "https://www.aeropres.in/api/atom/v1/userreferral/getpoint?appid=undefined", status_code=[400, 200, 502, 504, 427, 403])
+        return await self.call("GET", f"https://www.aeropres.in/api/atom/v1/userreferral/getpoint?appid={self.account.appid}", status_code=[400, 200, 502, 504, 427, 403])
 
     async def task(self, taskId):
         return await self.call("POST", "https://www.aeropres.in/chromeapi/dawn/v1/profile/update", json={taskId: taskId})
 
     async def keepalive_post(self):
-        return await self.call("POST", "https://www.aeropres.in/chromeapi/dawn/v1/userreward/keepalive", ret_json=False, status_code=[429, 200, 502, 504], json={
+        return await self.call("POST", f"https://www.aeropres.in/chromeapi/dawn/v1/userreward/keepalive?appid={self.account.appid}", ret_json=False, status_code=[429, 200, 502, 504], json={
                 "username": self.account.email,
                 "extensionid": extensionid,
                 "numberoftabs": 0,
@@ -188,5 +182,5 @@ class Dawn:
         })
 
     async def keepalive_options(self):
-        return await self.call("OPTIONS", "https://www.aeropres.in/chromeapi/dawn/v1/userreward/keepalive", ret_json=False, status_code=[204, 200, 502])
+        return await self.call("OPTIONS", f"https://www.aeropres.in/chromeapi/dawn/v1/userreward/keepalive?appid={self.account.appid}", ret_json=False, status_code=[204, 200, 502])
 

@@ -23,6 +23,7 @@ async def main():
 
     accounts = Accounts()
     accounts.loads_accs()
+
     print()
 
 
@@ -43,16 +44,14 @@ async def main():
         tasks = []
         for account in accounts.accounts:
             if action == "1":
-                tasks.append(asyncio.create_task(sem_task(start_farming, Dawn(account))))
+                tasks.append(asyncio.create_task(start_farming(Dawn(account))))
 
             elif action == "2":
-                tasks.append(asyncio.create_task(sem_task(start_account_info, Dawn(account))))
+                tasks.append(asyncio.create_task(start_account_info(Dawn(account))))
 
 
         threading.Thread(target=send_acc_info).start()
         await asyncio.gather(*tasks)
-
-
 
 
 if __name__ == '__main__':

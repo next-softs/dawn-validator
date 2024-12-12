@@ -3,14 +3,19 @@ from files import *
 from config import register_mode
 from files import append_in_txt, remove_txt
 
+import hashlib, random
+
+
 class Account:
-    def __init__(self, email, password, proxy=None):
+    def __init__(self, email, password, appid, proxy=None):
         self.name = email.split("@")[0]
         self.email = email
         self.password = password
         self.proxy = proxy
         self.user_agent = UserAgent(os='windows').random
         self.token = self.get_token()
+
+        self.appid = appid
 
 
     def headers(self):
@@ -26,7 +31,8 @@ class Account:
             "Sec-Fetch-Dest": "empty",
             "Sec-Fetch-Mode": "cors",
             "Sec-Fetch-Site": "same-origin",
-            "User-Agent": self.user_agent
+            "origin": "chrome-extension://fpdkjdnhkakefebpekbdhillbhonfjjp",
+            "user-agent": self.user_agent
         }
 
     def save_token(self, token):
@@ -62,4 +68,11 @@ class Accounts:
                 continue
 
             acc = acc.split(":")
-            self.accounts.append(Account(email=acc[0], password=acc[1], proxy=proxies[i]))
+            name = acc[0].split("@")[0]
+
+            appid = get_appid_json(name)
+            if not appid:
+                appid = hashlib.md5(str(random.getrandbits(128)).encode()).hexdigest()[:24]
+                save_appid_json(name, appid)
+
+            self.accounts.append(Account(email=acc[0], password=acc[1], proxy=proxies[i], appid=appid))

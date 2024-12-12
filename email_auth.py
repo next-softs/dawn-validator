@@ -20,8 +20,8 @@ class EmailAuth:
         servers = {
             "gmail.com": "imap.gmail.com",                  # Google Mail
             "yahoo.com": "imap.mail.yahoo.com",             # Yahoo Mail
-            "outlook.com": "imap-mail.outlook.com",       # Microsoft Outlook
-            "hotmail.com": "imap-mail.outlook.com",       # Microsoft Hotmail
+            "outlook.com": "imap-mail.outlook.com",         # Microsoft Outlook
+            "hotmail.com": "imap-mail.outlook.com",         # Microsoft Hotmail
             "mail.ru": "imap.mail.ru",                      # Mail.ru
             "gmx.com": "imap.gmx.com",                      # GMX Mail
 

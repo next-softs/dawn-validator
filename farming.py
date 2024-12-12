@@ -30,24 +30,18 @@ async def start_farming(client):
                 alive = await client.keepalive_post()
                 balance = get_balance(userInfo)
 
-                # space = 12 - len(balance)
-                # space = 0 if space < 0 else space
-                # logger.debug(f"{balance} POINTS {' '*space}| {client.account.name} farming..")
-
-
                 accounts_info[client.account.name]["status"] = True
                 accounts_info[client.account.name]["update"] = int(time.time())
                 accounts_info[client.account.name]["points"] = balance
-
             else:
-                # logger.debug(f"{client.account.name} not connections {userInfo}")
-
 
                 accounts_info[client.account.name]["status"] = False
                 if userInfo and "status" in userInfo and not userInfo["status"]:
                     await client.login()
+                else:
+                    print(client.account.name, userInfo)
 
-            await asyncio.sleep(120)
+            await asyncio.sleep(300)
 
         except Exception as err:
             logger.error(f"{client.account.name} {err}")
