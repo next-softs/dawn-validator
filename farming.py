@@ -38,8 +38,6 @@ async def start_farming(client):
                 accounts_info[client.account.name]["status"] = False
                 if userInfo and "status" in userInfo and not userInfo["status"]:
                     await client.login()
-                else:
-                    print(client.account.name, userInfo)
 
             await asyncio.sleep(300)
 
