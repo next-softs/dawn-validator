@@ -13,5 +13,5 @@ delay_reg_accs = [60, 180]      # задержка между регистрац
 
 # id расширения и версия, меняйте только если знаете что делаете
 extensionid = "fpdkjdnhkakefebpekbdhillbhonfjjp"
-version_extension = "1.1.1"
+version_extension = "1.1.2"
 
