@@ -12,7 +12,7 @@ class Account:
         self.email = email
         self.password = password
         self.proxy = proxy
-        self.user_agent = UserAgent(os='windows', fallback='chrome').random
+        self.user_agent = UserAgent(os='windows', fallback='chrome', safe_attrs = ( '__injections__' ,)).random
         self.token = self.get_token()
 
         self.appid = appid
