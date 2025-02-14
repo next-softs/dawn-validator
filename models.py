@@ -12,7 +12,7 @@ class Account:
         self.email = email
         self.password = password
         self.proxy = proxy
-        self.user_agent = UserAgent(os='windows').random
+        self.user_agent = UserAgent(os='windows', fallback="Mozilla/5.0 (Windows NT 10.0; Win64; x64)").random
         self.token = self.get_token()
 
         self.appid = appid
